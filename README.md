@@ -11,7 +11,7 @@ Coming soon
 
 ## Usage
 
-Once you have installed Pathwire-iOS into your project, we can start setting it up. 
+Once you have installed Patchwire-iOS into your project, we can start setting it up. 
 
 ### Connecting to the server
 ```swift
