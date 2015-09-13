@@ -8,6 +8,3 @@ xcode_project: Patchwire-iOS.xcodeproj
 xcode_scheme: Patchwire-iOS
 osx_image: beta-xcode6.3
 xcode_sdk: iphonesimulator8.3
-
-script:
-- xcodebuild clean build test -project Patchwire-iOS.xcodeproj -scheme Patchwire-iOS CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
