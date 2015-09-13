@@ -1,4 +1,4 @@
-# patchwire-ios
+# Patchwire for iOS
 iOS Library for the [Patchwire](https://github.com/twisterghost/gamatas) multiplayer server framework
 
 ## Installation
@@ -47,13 +47,19 @@ Patchwire.sharedInstance().reconnect()
 
 ## Example Chat Project
 
+### Server Side
+
 To run the example chat project, first let's setup the Patchwire server. 
 
 1. Open a terminal and go to the `Example/server` directory
 2. Install Patchwire using `npm install patchwire@0.1.2`
 3. Run the server using `node example.js`
 
-Your server should now be running locally on `localhost:3001`. Next setup the iOS client. For this example, we're using two iOS simulators that will have a build of the chat app.
+Your server should now be running locally on `localhost:3001`. 
+
+### Client Side
+
+Next setup the iOS client. For this example, we're using two iOS simulators that will have a build of the chat app.
 
 1. Open `Patchwire-iOS.xcodeproj` using Xcode
 2. Select an iOS simulator (ex. iPhone 6)
