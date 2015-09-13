@@ -5,31 +5,31 @@ iOS Library for the [Patchwire](https://github.com/twisterghost/gamatas) multipl
 
 ## Installation
 
-### CocoaPods
+#### CocoaPods
 Coming soon
 
-### Carthage
+#### Carthage
 Coming soon
 
 ## Usage
 
 Once you have installed Patchwire-iOS into your project, we can start setting it up. 
 
-### Connecting to the server
+#### Connecting to the server
 ```swift
 Patchwire.sharedInstance().verboseLogging = false
 Patchwire.sharedInstance().configure(serverIP: "localhost", serverPort: 3001)
 Patchwire.sharedInstance().connect()
 ```
 
-### Sending a command
+#### Sending a command
 With every command, you can send a dictionary containing some information.
 ```swift
 var chatDictionary : Dictionary<String,AnyObject> = Dictionary(dictionaryLiteral: ("username", "player"),("message", "hello"))
 Patchwire.sharedInstance().sendCommand("chat", withData: chatDictionary)
 ```
 
-### Receiving a command
+#### Receiving a command
 To receive incoming commands from the server, use `NSNotificationCenter`.
 ```swift
 var chatCommandKey : String = Patchwire.sharedInstance().getNotificationKey(command: "chat")
@@ -38,7 +38,7 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveChat
 
 The NSNotification's `userInfo` dictionary will contain the JSON blob sent from the server.
 
-### Disconnect/Reconnect
+#### Disconnect/Reconnect
 ```swift
 // To disconnect from the server
 Patchwire.sharedInstance().disconnect()
@@ -49,7 +49,7 @@ Patchwire.sharedInstance().reconnect()
 
 ## Example Chat Project
 
-### Server Side
+#### Server Side
 
 To run the example chat project, first let's setup the Patchwire server. 
 
@@ -59,7 +59,7 @@ To run the example chat project, first let's setup the Patchwire server.
 
 Your server should now be running locally on `localhost:3001`. 
 
-### Client Side
+#### Client Side
 
 Next setup the iOS client. For this example, we're using two iOS simulators that will have a build of the chat app.
 
@@ -74,3 +74,7 @@ Next setup the iOS client. For this example, we're using two iOS simulators that
 9. Repeat step 8 (a warning will pop up, ignore it)
 10. On the second simulator, under `Hardware > Device` select a device with the chat app installed (ex. if the first simulator is an iPhone 5s, select iPhone 6).
 11. Run the chat app on both devices.
+
+## License
+
+patchwire-ios is released under the MIT license. See LICENSE for details.
