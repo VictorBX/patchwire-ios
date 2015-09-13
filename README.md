@@ -1,5 +1,5 @@
 # Patchwire for iOS
-iOS Library for the [Patchwire](https://github.com/twisterghost/gamatas) multiplayer server framework
+iOS Library for the [Patchwire](https://github.com/twisterghost/patchwire) multiplayer server framework
 
 [![Build Status](https://travis-ci.org/VictorBX/patchwire-ios.svg?branch=master)](https://travis-ci.org/VictorBX/patchwire-ios)
 
