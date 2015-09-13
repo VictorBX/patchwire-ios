@@ -20,46 +20,19 @@ class PatchwireTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
-
-    func testAddCommand() {
-        // Given
-        var patchwire : Patchwire = Patchwire()
-        
-        // When
-        patchwire.addCommand("chat")
-        patchwire.addCommand("updatePlayer")
-        
-        // Then
-        XCTAssertEqual(2, patchwire.commandSet.count, "Must have 'chat' and 'updatePlayer' command")
-        XCTAssertTrue(patchwire.commandSet.contains("chat"), "Must contain 'chat' command")
-        XCTAssertTrue(patchwire.commandSet.contains("updatePlayer"), "Must contain 'updatePlayer' command")
-    }
     
-    func testRemoveCommand() {
+    func testConfigure() {
         // Given
         var patchwire : Patchwire = Patchwire()
+        let ip : String = "localhost"
+        let port : Int = 3002
         
         // When
-        patchwire.addCommand("chat")
-        patchwire.removeCommand("chat")
-        patchwire.removeCommand("fakecommand")
+        patchwire.configure(serverIP: ip, serverPort: port)
         
         // Then
-        XCTAssertEqual(0, patchwire.commandSet.count, "Removed 'chat' command")
-    }
-    
-    func testRemoveAllCommands() {
-        // Given
-        var patchwire : Patchwire = Patchwire()
-        
-        // When
-        patchwire.addCommand("chat")
-        patchwire.addCommand("register")
-        patchwire.addCommand("updatePlayer")
-        patchwire.removeAllCommands()
-        
-        // Then
-        XCTAssertEqual(0, patchwire.commandSet.count, "Removed all commands")
+        XCTAssertEqual("localhost", patchwire.serverIP, "IP must be localhost")
+        XCTAssertEqual(3002, patchwire.serverPort, "Port must be 3002")
     }
     
     func testGetNotificationKeyForCommands() {

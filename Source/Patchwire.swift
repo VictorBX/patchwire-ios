@@ -11,11 +11,10 @@ import UIKit
 class Patchwire: NSObject {
     
     // Config
-    private var serverIP : String
-    private var serverPort : Int
+    private(set) var serverIP : String
+    private(set) var serverPort : Int
     
     // Handlers
-    private(set) var commandSet : Set<String>
     private let commandKeyPrefix : String
     
     // Streams
@@ -47,7 +46,6 @@ class Patchwire: NSObject {
     required override init() {
         self.serverIP = "localhost"
         self.serverPort = 3001
-        self.commandSet = Set<String>()
         self.commandKeyPrefix = "com.patchwire.command."
         self.jsonParser = JSONParser()
         self.verboseLogging = false
@@ -99,30 +97,15 @@ class Patchwire: NSObject {
         verboseLogging("Finished closing IO stream")
     }
     
-    func reconnect() {
+    func reconnect(connectAfterSeconds seconds: UInt64) {
         self.disconnect()
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(5 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(seconds * NSEC_PER_SEC)), dispatch_get_main_queue()) { () -> Void in
             self.connect()
         }
     }
     
     
-    //MARK: - Handlers
-    
-    func addCommand(command: String) {
-        verboseLogging("Inserting command: \(command)")
-        self.commandSet.insert(command)
-    }
-    
-    func removeCommand(command: String) {
-        verboseLogging("Removing command: \(command)")
-        self.commandSet.remove(command)
-    }
-    
-    func removeAllCommands() {
-        verboseLogging("Removing all commands")
-        self.commandSet.removeAll(keepCapacity: false)
-    }
+    //MARK: - Notifications
     
     private func postNotification(command: String, data: [NSObject: AnyObject]?) {
         verboseLogging("Broadcasting command: \(command)")
@@ -146,7 +129,7 @@ class Patchwire: NSObject {
         var jsonData : NSData? = NSJSONSerialization.dataWithJSONObject(sendDictionary, options: NSJSONWritingOptions.allZeros, error: &error)
         if let _jsonData = jsonData {
             verboseLogging("Sending data")
-            self.outputStream!.write(UnsafePointer<UInt8>(_jsonData.bytes), maxLength: _jsonData.length)
+            self.outputStream?.write(UnsafePointer<UInt8>(_jsonData.bytes), maxLength: _jsonData.length)
         }
     }
     
@@ -186,7 +169,6 @@ extension Patchwire: NSStreamDelegate {
             handleStream(aStream)
         case NSStreamEvent.ErrorOccurred:
             verboseLogging("Stream error occured")
-            self.reconnect()
         case NSStreamEvent.EndEncountered:
             verboseLogging("End of stream")
             self.disconnect()
@@ -196,16 +178,16 @@ extension Patchwire: NSStreamDelegate {
         
         // Stream event notifications
         var notificationKey : String = ""
-        if aStream == self.inputStream {
+        if self.inputStream != nil && aStream == self.inputStream {
             NSNotificationCenter.defaultCenter().postNotificationName(kPWRInputStreamEventNotificationKey, object: nil, userInfo: [kPWRStreamEventKey: eventCode.rawValue])
-        } else if aStream == self.outputStream {
+        } else if self.outputStream != nil && aStream == self.outputStream {
             NSNotificationCenter.defaultCenter().postNotificationName(kPWROutputStreamEventNotificationKey, object: nil, userInfo: [kPWRStreamEventKey: eventCode.rawValue])
         }
     }
     
     // Handle incoming data
     private func handleStream(aStream: NSStream) {
-        if aStream == self.inputStream! {
+        if self.inputStream != nil && aStream == self.inputStream {
             let bufferSize : Int = 4096
             var buffer : [UInt8] = [UInt8](count: bufferSize, repeatedValue: 1)
             var len : Int
