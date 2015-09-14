@@ -36,7 +36,17 @@ var chatCommandKey : String = Patchwire.sharedInstance().getNotificationKey(comm
 NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveChatCommand:", name: chatCommandKey, object: nil)
 ```
 
-The NSNotification's `userInfo` dictionary will contain the JSON blob sent from the server.
+The `NSNotification`'s `userInfo` dictionary will contain the JSON blob sent from the server.
+
+#### Receiving IO Stream Events
+To receive IO `NSStreamEvent`s from `NSStreamDelegate`'s `- stream:handleEvent:`, register your observer to `NSNotificationCenter` using `kPWRInputStreamEventNotificationKey` and `kPWROutputStreamEventNotificationKey`. The `userInfo` dictionary will have the `NSStreamEvent` value under the `kPWRStreamEventKey` key.
+```swift
+// Receiving input stream events
+NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveInputStreamEvent:", name: kPWRInputStreamEventNotificationKey, object: nil)
+
+// Receiving output stream events
+NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveOutputStreamEvent:", name: kPWROutputStreamEventNotificationKey, object: nil)
+```
 
 #### Disconnect/Reconnect
 ```swift
@@ -44,7 +54,7 @@ The NSNotification's `userInfo` dictionary will contain the JSON blob sent from 
 Patchwire.sharedInstance().disconnect()
 
 // To reconnect to the server
-Patchwire.sharedInstance().reconnect()
+Patchwire.sharedInstance().reconnect(connectAfterSeconds: 5)
 ```
 
 ## Example Chat Project
