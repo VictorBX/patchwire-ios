@@ -34,12 +34,12 @@ class JSONParser: NSObject {
             for (index, character) in JSONString.characters.enumerate() {
                 
                 if character == self.openBrace {
-                    openBraces++
+                    openBraces += 1
                 } else if character == self.closeBrace {
-                    openBraces--
+                    openBraces -= 1
                     
                     if openBraces == 0 {
-                        let range = Range(start: JSONString.startIndex.advancedBy(startIndex), end: JSONString.startIndex.advancedBy(index+1))
+                        let range = JSONString.startIndex.advancedBy(startIndex)..<JSONString.startIndex.advancedBy(index+1)
                         self.JSONString = self.JSONString + JSONString.substringWithRange(range)
                         if let JSONDictionary: [String:AnyObject] = convertJSONStringToDictionary(self.JSONString) {
                             JSONArray.append(JSONDictionary)

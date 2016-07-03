@@ -27,9 +27,9 @@ class ChatTableViewController: UITableViewController {
         
         // Register for Patchwire notifications
         let chatCommandKey : String = patchwire.getNotificationKey(command: "chat")
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveChatCommand:", name: chatCommandKey, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatTableViewController.didReceiveChatCommand(_:)), name: chatCommandKey, object: nil)
         let logoutCommandKey : String = patchwire.getNotificationKey(command: "logout")
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveLogoutCommand:", name: logoutCommandKey, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatTableViewController.didReceiveLogoutCommand(_:)), name: logoutCommandKey, object: nil)
         
         // Register user
         let registerDictionary : Dictionary<String,AnyObject> = Dictionary(dictionaryLiteral: ("username", username))
