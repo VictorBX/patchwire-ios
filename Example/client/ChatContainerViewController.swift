@@ -39,7 +39,7 @@ class ChatContainerViewController: UIViewController, UITextFieldDelegate {
         super.viewDidDisappear(animated)
         
         // User has left the game
-        var chatDictionary : Dictionary<String,AnyObject> = Dictionary(dictionaryLiteral: ("username", username))
+        let chatDictionary : Dictionary<String,AnyObject> = Dictionary(dictionaryLiteral: ("username", username))
         patchwire.sendCommand("logout", withData: chatDictionary)
     }
 
@@ -54,11 +54,11 @@ class ChatContainerViewController: UIViewController, UITextFieldDelegate {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         super.prepareForSegue(segue, sender: sender)
         
-        var segueName : String? = segue.identifier
+        let segueName : String? = segue.identifier
         
         if let _segueName = segueName {
             if _segueName == self.chatSegueName {
-                var chatTableController : ChatTableViewController = segue.destinationViewController as! ChatTableViewController
+                let chatTableController : ChatTableViewController = segue.destinationViewController as! ChatTableViewController
                 chatTableController.username = self.username
                 chatTableController.tableView.contentInset = UIEdgeInsetsMake(0, 0, self.inputViewHeightConstraint.constant, 0)
             }
@@ -71,7 +71,7 @@ class ChatContainerViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func didSelectSendButton(sender: AnyObject) {
         // Send chat event
-        var chatDictionary : Dictionary<String,AnyObject> = Dictionary(dictionaryLiteral: ("username", username),("message", self.inputTextField.text))
+        let chatDictionary = ["username": username, "message": inputTextField.text ?? ""]
         patchwire.sendCommand("chat", withData: chatDictionary)
         self.inputTextField.text = ""
     }
@@ -82,7 +82,7 @@ class ChatContainerViewController: UIViewController, UITextFieldDelegate {
     func keyboardWillShow(notification: NSNotification) {
         if let info = notification.userInfo {
             if let keyboardInfo: AnyObject = info[UIKeyboardFrameEndUserInfoKey] {
-                var keyboardHeight = keyboardInfo.CGRectValue().height
+                let keyboardHeight = keyboardInfo.CGRectValue.height
                 self.view.layoutIfNeeded()
                 self.inputViewBottomConstraint.constant = keyboardHeight
                 UIView.animateWithDuration(1, animations: { () -> Void in

@@ -26,13 +26,13 @@ class ChatTableViewController: UITableViewController {
         self.tableView.rowHeight = UITableViewAutomaticDimension
         
         // Register for Patchwire notifications
-        var chatCommandKey : String = patchwire.getNotificationKey(command: "chat")
+        let chatCommandKey : String = patchwire.getNotificationKey(command: "chat")
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveChatCommand:", name: chatCommandKey, object: nil)
-        var logoutCommandKey : String = patchwire.getNotificationKey(command: "logout")
+        let logoutCommandKey : String = patchwire.getNotificationKey(command: "logout")
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveLogoutCommand:", name: logoutCommandKey, object: nil)
         
         // Register user
-        var registerDictionary : Dictionary<String,AnyObject> = Dictionary(dictionaryLiteral: ("username", username))
+        let registerDictionary : Dictionary<String,AnyObject> = Dictionary(dictionaryLiteral: ("username", username))
         patchwire.sendCommand("register", withData: registerDictionary)
         
     }
@@ -54,7 +54,7 @@ class ChatTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell : ChatCell = tableView.dequeueReusableCellWithIdentifier("chatCell", forIndexPath: indexPath) as! ChatCell
+        let cell : ChatCell = tableView.dequeueReusableCellWithIdentifier("chatCell", forIndexPath: indexPath) as! ChatCell
         cell.configure(messages[indexPath.row])
         return cell
     }
@@ -77,7 +77,7 @@ class ChatTableViewController: UITableViewController {
     }
     
     private func addNewMessageUsingInfo(info: Dictionary<NSObject, AnyObject>) {
-        var newMessage : Message = Message(json: info)
+        let newMessage : Message = Message(json: info)
         messages.append(newMessage)
         
         self.tableView.beginUpdates()
@@ -89,9 +89,9 @@ class ChatTableViewController: UITableViewController {
     
     deinit {
         // Remove notifications
-        var chatCommandKey : String = patchwire.getNotificationKey(command: "chat")
+        let chatCommandKey : String = patchwire.getNotificationKey(command: "chat")
         NSNotificationCenter.defaultCenter().removeObserver(self, name: chatCommandKey, object: nil)
-        var logoutCommandKey : String = patchwire.getNotificationKey(command: "logout")
+        let logoutCommandKey : String = patchwire.getNotificationKey(command: "logout")
         NSNotificationCenter.defaultCenter().removeObserver(self, name: logoutCommandKey, object: nil)
     }
 }

@@ -25,13 +25,13 @@ class JSONParser: NSObject {
     func append(JSONString: String) -> [AnyObject] {
         var JSONArray : [AnyObject] = []
         
-        if count(JSONString) > 0 {
+        if JSONString.characters.count > 0 {
             
             // Start index
             var startIndex : Int = 0
             
             // Go through string and find open/close braces
-            for (index, character) in enumerate(JSONString) {
+            for (index, character) in JSONString.characters.enumerate() {
                 
                 if character == self.openBrace {
                     openBraces++
@@ -39,7 +39,7 @@ class JSONParser: NSObject {
                     openBraces--
                     
                     if openBraces == 0 {
-                        var range = Range(start: advance(JSONString.startIndex,startIndex), end: advance(JSONString.startIndex, index+1))
+                        let range = Range(start: JSONString.startIndex.advancedBy(startIndex), end: JSONString.startIndex.advancedBy(index+1))
                         self.JSONString = self.JSONString + JSONString.substringWithRange(range)
                         if let JSONDictionary: [String:AnyObject] = convertJSONStringToDictionary(self.JSONString) {
                             JSONArray.append(JSONDictionary)
@@ -51,7 +51,7 @@ class JSONParser: NSObject {
             }
             
             // Store remaining json for later use
-            self.JSONString = self.JSONString + JSONString.substringFromIndex(advance(JSONString.startIndex, startIndex))
+            self.JSONString = self.JSONString + JSONString.substringFromIndex(JSONString.startIndex.advancedBy(startIndex))
         }
         
         return JSONArray
@@ -59,12 +59,12 @@ class JSONParser: NSObject {
     
     private func convertJSONStringToDictionary(JSONString: String) -> [String:AnyObject]? {
         if let data = JSONString.dataUsingEncoding(NSUTF8StringEncoding) {
-            var error: NSError?
-            let json = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.allZeros, error: &error) as? [String:AnyObject]
-            if error != nil {
-                println(error)
+            do {
+                let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? [String: AnyObject]
+                return json
+            } catch {
+                print("Can't serialize to dictionary")
             }
-            return json
         }
         return nil
     }

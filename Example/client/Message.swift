@@ -59,7 +59,7 @@ class Message: NSObject {
             attributeDictionary[NSFontAttributeName] = UIFont.italicSystemFontOfSize(17)
         }
         
-        var attributedString : NSMutableAttributedString = NSMutableAttributedString(string: displayMessage(), attributes: attributeDictionary)
+        let attributedString : NSMutableAttributedString = NSMutableAttributedString(string: displayMessage(), attributes: attributeDictionary)
         return attributedString.copy() as! NSAttributedString
     }
 }

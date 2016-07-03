@@ -23,7 +23,7 @@ class PatchwireTests: XCTestCase {
     
     func testConfigure() {
         // Given
-        var patchwire : Patchwire = Patchwire()
+        let patchwire : Patchwire = Patchwire()
         let ip : String = "localhost"
         let port : Int = 3002
         
@@ -37,7 +37,7 @@ class PatchwireTests: XCTestCase {
     
     func testGetNotificationKeyForCommands() {
         // Given
-        var patchwire : Patchwire = Patchwire()
+        let patchwire : Patchwire = Patchwire()
         
         // When
         let chatNotificationKey = patchwire.getNotificationKey(command: "chat")

@@ -33,14 +33,12 @@ class ViewController: UIViewController {
     // MARK: - Enter button
     
     @IBAction func didSelectEnterButton(sender: AnyObject) {
-        if count(usernameTextField.text) == 0 {
-            NSLog("No username entered")
-        } else {
-            // Push to chat controller
-            var chatController: ChatContainerViewController = self.storyboard!.instantiateViewControllerWithIdentifier("chatContainer") as! ChatContainerViewController
-            chatController.username = usernameTextField.text
-            self.navigationController!.pushViewController(chatController, animated: true)
-        }
+        guard let text = usernameTextField.text where text.characters.count > 0 else { return }
+        
+        // Push to chat controller
+        let chatController: ChatContainerViewController = self.storyboard!.instantiateViewControllerWithIdentifier("chatContainer") as! ChatContainerViewController
+        chatController.username = text
+        self.navigationController!.pushViewController(chatController, animated: true)
     }
     
 

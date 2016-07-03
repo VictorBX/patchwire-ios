@@ -37,7 +37,7 @@ class Patchwire: NSObject {
         }
         
         dispatch_once(&Static.onceToken) {
-            Static.instance = self()
+            Static.instance = self.init()
         }
         
         return Static.instance!
@@ -54,7 +54,7 @@ class Patchwire: NSObject {
     
     //MARK: - Configure
     
-    func configure(#serverIP: String, serverPort: Int) {
+    func configure(serverIP serverIP: String, serverPort: Int) {
         self.serverIP = serverIP
         self.serverPort = serverPort
         
@@ -125,18 +125,23 @@ class Patchwire: NSObject {
             }
         }
         
-        var error: NSError?
-        var jsonData : NSData? = NSJSONSerialization.dataWithJSONObject(sendDictionary, options: NSJSONWritingOptions.allZeros, error: &error)
-        if let _jsonData = jsonData {
+        var jsonData : NSData? = nil
+        do {
+            jsonData = try NSJSONSerialization.dataWithJSONObject(sendDictionary, options: NSJSONWritingOptions())
+        } catch let error as NSError {
+            verboseLogging("Parsing error: " + error.description)
+        }
+        
+        if let jsonData = jsonData {
             verboseLogging("Sending data")
-            self.outputStream?.write(UnsafePointer<UInt8>(_jsonData.bytes), maxLength: _jsonData.length)
+            self.outputStream?.write(UnsafePointer<UInt8>(jsonData.bytes), maxLength: jsonData.length)
         }
     }
     
     
     //MARK: - Helper Functions
     
-    func getNotificationKey(#command: String) -> String {
+    func getNotificationKey(command command: String) -> String {
         return self.commandKeyPrefix + command
     }
     
@@ -177,7 +182,6 @@ extension Patchwire: NSStreamDelegate {
         }
         
         // Stream event notifications
-        var notificationKey : String = ""
         if self.inputStream != nil && aStream == self.inputStream {
             NSNotificationCenter.defaultCenter().postNotificationName(kPWRInputStreamEventNotificationKey, object: nil, userInfo: [kPWRStreamEventKey: eventCode.rawValue])
         } else if self.outputStream != nil && aStream == self.outputStream {
@@ -195,9 +199,8 @@ extension Patchwire: NSStreamDelegate {
             while self.inputStream!.hasBytesAvailable {
                 len = self.inputStream!.read(&buffer, maxLength: buffer.count)
                 if len > 0 {
-                    var output : NSString? = NSString(bytes: buffer, length: len, encoding: NSASCIIStringEncoding)
+                    let output : NSString? = NSString(bytes: buffer, length: len, encoding: NSASCIIStringEncoding)
                     if let _output = output {
-                        var d : NSMutableData = NSMutableData(bytes: buffer, length: len)
                         handleJSONBlobs(jsonParser.append(_output as String))
                     }
                 }
@@ -209,7 +212,7 @@ extension Patchwire: NSStreamDelegate {
     private func handleJSONBlobs(jsonBlobs: [AnyObject]) {
         for jsonBlob in jsonBlobs {
             if let JSONDictionary = jsonBlob as? [String: AnyObject] {
-                var command : String = (JSONDictionary["command"] ?? "") as! String
+                let command : String = (JSONDictionary["command"] ?? "") as! String
                 postNotification(command, data: JSONDictionary)
             }
         }

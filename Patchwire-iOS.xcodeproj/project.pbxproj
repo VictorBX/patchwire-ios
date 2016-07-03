@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C0927B11D29951300126D22 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0927B01D29951300126D22 /* Logger.swift */; };
 		1C3DF98C1BA13BCB00CD399C /* JSONParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3DF98B1BA13BCB00CD399C /* JSONParserTests.swift */; };
 		1C3DF9901BA15A7800CD399C /* PatchwireTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3DF98F1BA15A7800CD399C /* PatchwireTests.swift */; };
 		1CC57E291BA42C6700D9D79A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1CC57E281BA42C6700D9D79A /* Images.xcassets */; };
@@ -37,6 +38,7 @@
 		1C04BC0F1B9C25A4007CBF26 /* Patchwire-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Patchwire-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C04BC241B9C25A4007CBF26 /* Patchwire-iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Patchwire-iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C04BC291B9C25A4007CBF26 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1C0927B01D29951300126D22 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		1C3DF98B1BA13BCB00CD399C /* JSONParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONParserTests.swift; sourceTree = "<group>"; };
 		1C3DF98F1BA15A7800CD399C /* PatchwireTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PatchwireTests.swift; sourceTree = "<group>"; };
 		1CC57E281BA42C6700D9D79A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = client/Images.xcassets; sourceTree = "<group>"; };
@@ -110,8 +112,9 @@
 		1CC57E161BA42A7100D9D79A /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				1CC57E3D1BA42CD500D9D79A /* Patchwire.swift */,
+				1C0927B01D29951300126D22 /* Logger.swift */,
 				1CC57E3C1BA42CD500D9D79A /* JSONParser.swift */,
+				1CC57E3D1BA42CD500D9D79A /* Patchwire.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -184,7 +187,9 @@
 		1C04BC071B9C25A4007CBF26 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastSwiftMigration = 0720;
+				LastSwiftUpdateCheck = 0720;
+				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "Victor Barrera";
 				TargetAttributes = {
 					1C04BC0E1B9C25A4007CBF26 = {
@@ -247,6 +252,7 @@
 				1CC57E3B1BA42C9500D9D79A /* ViewController.swift in Sources */,
 				1CC57E3A1BA42C9500D9D79A /* Message.swift in Sources */,
 				1CC57E381BA42C9500D9D79A /* ChatTableViewController.swift in Sources */,
+				1C0927B11D29951300126D22 /* Logger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -312,6 +318,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -380,6 +387,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Example/client/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.victornb.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -390,6 +398,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Example/client/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.victornb.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -398,16 +407,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.victornb.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Patchwire-iOS.app/Patchwire-iOS";
 			};
@@ -417,12 +424,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.victornb.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Patchwire-iOS.app/Patchwire-iOS";
 			};
