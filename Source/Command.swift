@@ -6,7 +6,7 @@
 //  Copyright © 2016 Victor Barrera. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
 /// A struct that defines the command that will be sent to the Patchwire server.
 public struct Command {

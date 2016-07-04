@@ -6,7 +6,7 @@
 //  Copyright © 2016 Victor Barrera. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
 enum ChatCommand : String {
     case Register = "register"
