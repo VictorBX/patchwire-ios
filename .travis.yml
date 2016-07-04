@@ -13,5 +13,5 @@ before_install:
   - sudo gem install xcpretty
 
 script:
-  - xcodebuild -project Patchwire-iOS.xcodeproj/ -scheme 'Patchwire-iOS' -destination 'platform=iOS Simulator,name=iPhone 6,OS=9.3' clean build | xcpretty
-  - xcodebuild -project Patchwire-iOS.xcodeproj/ -scheme 'Patchwire-iOS' -destination 'platform=iOS Simulator,name=iPhone 6,OS=9.3' test | xcpretty
+  - xcodebuild -project Patchwire-iOS.xcodeproj/ -scheme 'Patchwire-iOS' -destination 'platform=iOS Simulator,name=iPhone 6,OS=9.3' clean build | xcpretty && exit ${PIPESTATUS[0]}
+  - xcodebuild -project Patchwire-iOS.xcodeproj/ -scheme 'Patchwire-iOS' -destination 'platform=iOS Simulator,name=iPhone 6,OS=9.3' test | xcpretty && exit ${PIPESTATUS[0]}
