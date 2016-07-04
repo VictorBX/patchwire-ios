@@ -17,8 +17,8 @@
 		1C7C37C31D2A115300D3A7D4 /* ChatCommandService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7C37C21D2A115300D3A7D4 /* ChatCommandService.swift */; };
 		1C7C37C41D2A184400D3A7D4 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7C37BE1D2A058900D3A7D4 /* Command.swift */; };
 		1C7C37CE1D2A48AD00D3A7D4 /* Patchwire iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C7C37CD1D2A48AD00D3A7D4 /* Patchwire iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1C7C37D21D2A48AD00D3A7D4 /* Patchwire iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C7C37CB1D2A48AD00D3A7D4 /* Patchwire iOS.framework */; };
-		1C7C37D31D2A48AD00D3A7D4 /* Patchwire iOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1C7C37CB1D2A48AD00D3A7D4 /* Patchwire iOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1C7C37D21D2A48AD00D3A7D4 /* PatchwireiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C7C37CB1D2A48AD00D3A7D4 /* PatchwireiOS.framework */; };
+		1C7C37D31D2A48AD00D3A7D4 /* PatchwireiOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1C7C37CB1D2A48AD00D3A7D4 /* PatchwireiOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1C7C37D81D2A48DE00D3A7D4 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7C37BE1D2A058900D3A7D4 /* Command.swift */; };
 		1C7C37D91D2A48DE00D3A7D4 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0927B01D29951300126D22 /* Logger.swift */; };
 		1C7C37DA1D2A48DE00D3A7D4 /* JSONParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CC57E3C1BA42CD500D9D79A /* JSONParser.swift */; };
@@ -62,7 +62,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				1C7C37D31D2A48AD00D3A7D4 /* Patchwire iOS.framework in Embed Frameworks */,
+				1C7C37D31D2A48AD00D3A7D4 /* PatchwireiOS.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -79,7 +79,7 @@
 		1C7C37B71D29BC2100D3A7D4 /* Notifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifier.swift; sourceTree = "<group>"; };
 		1C7C37BE1D2A058900D3A7D4 /* Command.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
 		1C7C37C21D2A115300D3A7D4 /* ChatCommandService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatCommandService.swift; path = client/ChatCommandService.swift; sourceTree = "<group>"; };
-		1C7C37CB1D2A48AD00D3A7D4 /* Patchwire iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "Patchwire iOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1C7C37CB1D2A48AD00D3A7D4 /* PatchwireiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PatchwireiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C7C37CD1D2A48AD00D3A7D4 /* Patchwire iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Patchwire iOS.h"; sourceTree = "<group>"; };
 		1C7C37CF1D2A48AD00D3A7D4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1CC57E281BA42C6700D9D79A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = client/Images.xcassets; sourceTree = "<group>"; };
@@ -100,7 +100,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1C7C37D21D2A48AD00D3A7D4 /* Patchwire iOS.framework in Frameworks */,
+				1C7C37D21D2A48AD00D3A7D4 /* PatchwireiOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -137,7 +137,7 @@
 			children = (
 				1C04BC0F1B9C25A4007CBF26 /* Patchwire-iOS.app */,
 				1C04BC241B9C25A4007CBF26 /* Patchwire-iOSTests.xctest */,
-				1C7C37CB1D2A48AD00D3A7D4 /* Patchwire iOS.framework */,
+				1C7C37CB1D2A48AD00D3A7D4 /* PatchwireiOS.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -272,7 +272,7 @@
 			);
 			name = "Patchwire iOS";
 			productName = "Patchwire iOS";
-			productReference = 1C7C37CB1D2A48AD00D3A7D4 /* Patchwire iOS.framework */;
+			productReference = 1C7C37CB1D2A48AD00D3A7D4 /* PatchwireiOS.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -578,7 +578,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.victornb.Patchwire-iOS";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = PatchwireiOS;
 				SKIP_INSTALL = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -599,7 +599,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.victornb.Patchwire-iOS";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = PatchwireiOS;
 				SKIP_INSTALL = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
