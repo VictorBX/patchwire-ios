@@ -101,6 +101,10 @@ Next setup the iOS client. For this example, we're using two iOS simulators that
 10. On the second simulator, under `Hardware > Device` select a device with the chat app installed (ex. if the first simulator is an iPhone 6s Plus, select iPhone 6s)
 11. Run the chat app on both devices.
 
+Result:
+
+[![ScreenShot](/Resources/PatchwireExample.png)](https://www.youtube.com/watch?v=xg4aGimb_Rk)
+
 ## License
 
 patchwire-ios is released under the MIT license. See LICENSE for details.
