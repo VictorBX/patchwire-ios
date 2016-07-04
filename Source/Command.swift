@@ -15,7 +15,7 @@ public struct Command {
     public var command : String
     
     /// Additional data to be sent with the command.
-    public var data : [String: AnyObject]?
+    public var data : [String: AnyObject]
     
     
     /**
@@ -28,6 +28,6 @@ public struct Command {
     */
     init(command: String, data: [String: AnyObject]?) {
         self.command = command
-        self.data = data
+        self.data = data ?? [String: AnyObject]()
     }
 }

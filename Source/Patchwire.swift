@@ -130,10 +130,8 @@ public class Patchwire: NSObject {
     public func sendCommand(command: Command) {
         var sendDictionary = [String: AnyObject]()
         sendDictionary["command"] = command.command
-        if let data = command.data {
-            for key in data.keys {
-                sendDictionary[key] = data[key]
-            }
+        for key in command.data.keys {
+            sendDictionary[key] = command.data[key]
         }
         
         var jsonData : NSData? = nil
@@ -221,13 +219,29 @@ extension Patchwire: NSStreamDelegate {
     private func handleJSONBlobs(jsonBlobs: [AnyObject]) {
         for jsonBlob in jsonBlobs {
             if let JSONDictionary = jsonBlob as? [String: AnyObject] {
-                if let commandString = JSONDictionary["command"] as? String {
-                    let command = Command(command: commandString, data: JSONDictionary)
-                    logger?.info(withLog: "Broadcasting command - \(command.command)")
-                    notifier.postCommand(command)
+                
+                // Check for batch commands
+                if let batch = JSONDictionary["batch"] as? Bool where batch {
+                    if let commands = JSONDictionary["commands"] as? [[String: AnyObject]] {
+                        logger?.info(withLog: "Received batch of commands")
+                        commands.forEach({ (commandDictionary) in
+                            handleCommandDictionary(commandDictionary)
+                        })
+                    }
+                } else {
+                    // Single command
+                    handleCommandDictionary(JSONDictionary)
                 }
+                
             }
         }
+    }
+    
+    private func handleCommandDictionary(commandDictionary: [String: AnyObject]) {
+        guard let commandString = commandDictionary["command"] as? String else { return }
+        let command = Command(command: commandString, data: commandDictionary)
+        logger?.info(withLog: "Broadcasting command - \(command.command)")
+        notifier.postCommand(command)
     }
     
 }
