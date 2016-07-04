@@ -3,17 +3,33 @@ iOS Library for the [Patchwire](https://github.com/twisterghost/patchwire) multi
 
 [![Build Status](https://travis-ci.org/VictorBX/patchwire-ios.svg?branch=master)](https://travis-ci.org/VictorBX/patchwire-ios)
 
+## Requirements
+
+- iOS 8.0+
+- Xcode 7.3+
+
 ## Installation
+
+#### Carthage
+[Carthage](https://github.com/Carthage/Carthage) is a easy to use dependency manager. Once you have [installed](https://github.com/Carthage/Carthage#installing-carthage) Carthage, create a [Cartfile](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos) with the following:
+
+```
+github "VictorBX/patchwire-ios"
+```
 
 #### CocoaPods
 Coming soon
 
-#### Carthage
-Coming soon
+#### Manually
+
+You can simply drag and drop the files within `Source` into your project.
 
 ## Usage
 
-Once you have installed Patchwire-iOS into your project, we can start setting it up.
+Once you have installed Patchwire-iOS into your project, we can start setting it up. Fist import patchwire.
+```swift
+import PatchwireiOS
+```
 
 #### Connecting to the server
 ```swift
@@ -54,7 +70,7 @@ Patchwire.sharedInstance.reconnect()
 To run the example chat project, first let's setup the Patchwire server.
 
 1. Open a terminal and go to the `Example/server` directory
-2. Install Patchwire using `npm install patchwire@0.1.2` if you haven't done so already
+2. Install Patchwire using `npm install patchwire@0.2.0` if you haven't done so already
 3. Run the server using `node example.js`
 
 Your server should now be running locally on `localhost:3001`.
