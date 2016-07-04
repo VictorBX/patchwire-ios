@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1C7C37CA1D2A48AD00D3A7D4"
-               BuildableName = "Patchwire iOS.framework"
+               BuildableName = "PatchwireiOS.framework"
                BlueprintName = "Patchwire iOS"
                ReferencedContainer = "container:Patchwire-iOS.xcodeproj">
             </BuildableReference>
@@ -46,7 +46,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1C7C37CA1D2A48AD00D3A7D4"
-            BuildableName = "Patchwire iOS.framework"
+            BuildableName = "PatchwireiOS.framework"
             BlueprintName = "Patchwire iOS"
             ReferencedContainer = "container:Patchwire-iOS.xcodeproj">
          </BuildableReference>
@@ -64,7 +64,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1C7C37CA1D2A48AD00D3A7D4"
-            BuildableName = "Patchwire iOS.framework"
+            BuildableName = "PatchwireiOS.framework"
             BlueprintName = "Patchwire iOS"
             ReferencedContainer = "container:Patchwire-iOS.xcodeproj">
          </BuildableReference>
