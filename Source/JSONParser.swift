@@ -6,65 +6,71 @@
 //  Copyright (c) 2015 Victor Barrera. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
-class JSONParser: NSObject {
-   
-    private let openBrace : Character = "{"
-    private let closeBrace : Character = "}"
+private enum Brace : Character {
+    case Open = "{"
+    case Close = "}"
+}
+
+class JSONParser {
     
-    private(set) var openBraces : Int
-    private(set) var JSONString : String
+    // JSON 
+    private(set) var openBraces = 0
+    private(set) var storedJSONString = ""
     
-    override init() {
-        self.openBraces = 0
-        self.JSONString = ""
-        super.init()
+    // Debug Logger
+    private var logger : Logger?
+    var verboseLogging : Bool = false {
+        didSet {
+            logger = verboseLogging ? Logger() : nil
+        }
     }
     
     func append(JSONString: String) -> [AnyObject] {
-        var JSONArray : [AnyObject] = []
+        var JSONArray = [AnyObject]()
+        guard JSONString.characters.count > 0 else { return JSONArray }
         
-        if count(JSONString) > 0 {
+        // Start index
+        var startIndex = 0
+        
+        // Go through string and find open/close braces
+        for (index, character) in JSONString.characters.enumerate() {
+            guard let brace = Brace(rawValue: character) else { continue }
             
-            // Start index
-            var startIndex : Int = 0
-            
-            // Go through string and find open/close braces
-            for (index, character) in enumerate(JSONString) {
+            switch brace {
+            case .Open:
+                openBraces += 1
+            case .Close:
+                openBraces -= 1
                 
-                if character == self.openBrace {
-                    openBraces++
-                } else if character == self.closeBrace {
-                    openBraces--
-                    
-                    if openBraces == 0 {
-                        var range = Range(start: advance(JSONString.startIndex,startIndex), end: advance(JSONString.startIndex, index+1))
-                        self.JSONString = self.JSONString + JSONString.substringWithRange(range)
-                        if let JSONDictionary: [String:AnyObject] = convertJSONStringToDictionary(self.JSONString) {
-                            JSONArray.append(JSONDictionary)
-                            self.JSONString = ""
-                            startIndex = index + 1
-                        }
+                if openBraces == 0 {
+                    let range = JSONString.startIndex.advancedBy(startIndex)..<JSONString.startIndex.advancedBy(index+1)
+                    storedJSONString = storedJSONString + JSONString.substringWithRange(range)
+                    if let JSONDictionary = convertJSONStringToDictionary(storedJSONString) {
+                        JSONArray.append(JSONDictionary)
+                        storedJSONString = ""
+                        startIndex = index + 1
                     }
                 }
             }
             
-            // Store remaining json for later use
-            self.JSONString = self.JSONString + JSONString.substringFromIndex(advance(JSONString.startIndex, startIndex))
         }
+        
+        // Store remaining json for later use
+        storedJSONString = storedJSONString + JSONString.substringFromIndex(JSONString.startIndex.advancedBy(startIndex))
         
         return JSONArray
     }
     
     private func convertJSONStringToDictionary(JSONString: String) -> [String:AnyObject]? {
         if let data = JSONString.dataUsingEncoding(NSUTF8StringEncoding) {
-            var error: NSError?
-            let json = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.allZeros, error: &error) as? [String:AnyObject]
-            if error != nil {
-                println(error)
+            do {
+                let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? [String: AnyObject]
+                return json
+            } catch {
+                logger?.error(withLog: "Can not convert JSON string to dictionary - \(JSONString)")
             }
-            return json
         }
         return nil
     }

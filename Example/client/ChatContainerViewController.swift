@@ -9,11 +9,6 @@
 import UIKit
 
 class ChatContainerViewController: UIViewController, UITextFieldDelegate {
-
-    // Defaults
-    var patchwire : Patchwire = Patchwire.sharedInstance()
-    let chatSegueName : String = "chatSegue"
-    var username : String = ""
     
     // Input
     @IBOutlet weak var inputTextField: UITextField!
@@ -21,26 +16,35 @@ class ChatContainerViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var inputViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputViewBottomConstraint: NSLayoutConstraint!
     
+    // Defaults
+    private let patchwire = Patchwire.sharedInstance
+    private let chatSegueName = "chatSegue"
+    private var username = ""
+    
     
     // MARK: - Init
+    
+    class func chatContainer(withUsername username: String) -> ChatContainerViewController? {
+        let sb = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        if let chatController = sb.instantiateViewControllerWithIdentifier("chatContainer") as? ChatContainerViewController {
+            chatController.username = username
+            return chatController
+        }
+        return nil
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Nav bar title
-        self.navigationItem.title = "Chat"
-        
-        // Keyboard notifications
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
+        navigationItem.title = "Chat"
+        registerNotifications()
     }
     
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
         
         // User has left the game
-        var chatDictionary : Dictionary<String,AnyObject> = Dictionary(dictionaryLiteral: ("username", username))
-        patchwire.sendCommand("logout", withData: chatDictionary)
+        patchwire.sendCommand(ChatCommandService.logoutCommand(withUsername: username))
     }
 
     override func didReceiveMemoryWarning() {
@@ -49,42 +53,39 @@ class ChatContainerViewController: UIViewController, UITextFieldDelegate {
     }
     
     
-    // MARK: - Chat table view controller
+    //MARK: - Chat Table View Controller
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         super.prepareForSegue(segue, sender: sender)
         
-        var segueName : String? = segue.identifier
+        let segueName = segue.identifier
         
-        if let _segueName = segueName {
-            if _segueName == self.chatSegueName {
-                var chatTableController : ChatTableViewController = segue.destinationViewController as! ChatTableViewController
-                chatTableController.username = self.username
-                chatTableController.tableView.contentInset = UIEdgeInsetsMake(0, 0, self.inputViewHeightConstraint.constant, 0)
+        if let segueName = segueName where segueName == chatSegueName {
+            if let chatTableController = segue.destinationViewController as? ChatTableViewController {
+                chatTableController.username = username
+                chatTableController.tableView.contentInset = UIEdgeInsetsMake(0, 0, inputViewHeightConstraint.constant, 0)
             }
         }
-        
     }
     
     
-    // MARK: - Input
+    //MARK: - Input
     
     @IBAction func didSelectSendButton(sender: AnyObject) {
         // Send chat event
-        var chatDictionary : Dictionary<String,AnyObject> = Dictionary(dictionaryLiteral: ("username", username),("message", self.inputTextField.text))
-        patchwire.sendCommand("chat", withData: chatDictionary)
-        self.inputTextField.text = ""
+        patchwire.sendCommand(ChatCommandService.chatCommand(withUsername: username, message: inputTextField.text ?? ""))
+        inputTextField.text = ""
     }
     
     
-    // MARK: - Keyboard
+    //MARK: - Keyboard
     
     func keyboardWillShow(notification: NSNotification) {
         if let info = notification.userInfo {
             if let keyboardInfo: AnyObject = info[UIKeyboardFrameEndUserInfoKey] {
-                var keyboardHeight = keyboardInfo.CGRectValue().height
-                self.view.layoutIfNeeded()
-                self.inputViewBottomConstraint.constant = keyboardHeight
+                let keyboardHeight = keyboardInfo.CGRectValue.height
+                view.layoutIfNeeded()
+                inputViewBottomConstraint.constant = keyboardHeight
                 UIView.animateWithDuration(1, animations: { () -> Void in
                     self.view.layoutIfNeeded()
                 });
@@ -93,17 +94,32 @@ class ChatContainerViewController: UIViewController, UITextFieldDelegate {
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        self.view.layoutIfNeeded()
-        self.inputViewBottomConstraint.constant = 0
+        view.layoutIfNeeded()
+        inputViewBottomConstraint.constant = 0
         UIView.animateWithDuration(1, animations: { () -> Void in
             self.view.layoutIfNeeded()
         });
     }
     
     
-    deinit {
+    //MARK: - Notifications
+    
+    private func registerNotifications() {
+        // Keyboard notifications
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatContainerViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatContainerViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+    }
+    
+    private func unregisterNotifications() {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
+    }
+    
+    
+    //MARK: - Deinit
+    
+    deinit {
+        unregisterNotifications()
     }
     
 

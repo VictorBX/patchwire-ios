@@ -12,7 +12,7 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var usernameTextField: UITextField!
     
-    var patchwire : Patchwire = Patchwire.sharedInstance()
+    var patchwire = Patchwire.sharedInstance
     
     
     // MARK: - Init
@@ -21,7 +21,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         // Nav bar title
-        self.navigationItem.title = "Patchwire"
+        navigationItem.title = "Patchwire"
     }
 
     override func didReceiveMemoryWarning() {
@@ -33,13 +33,11 @@ class ViewController: UIViewController {
     // MARK: - Enter button
     
     @IBAction func didSelectEnterButton(sender: AnyObject) {
-        if count(usernameTextField.text) == 0 {
-            NSLog("No username entered")
-        } else {
-            // Push to chat controller
-            var chatController: ChatContainerViewController = self.storyboard!.instantiateViewControllerWithIdentifier("chatContainer") as! ChatContainerViewController
-            chatController.username = usernameTextField.text
-            self.navigationController!.pushViewController(chatController, animated: true)
+        guard let username = usernameTextField.text where username.characters.count > 0 else { return }
+        
+        // Push to chat controller
+        if let chatController = ChatContainerViewController.chatContainer(withUsername: username) {
+            navigationController?.pushViewController(chatController, animated: true)
         }
     }
     
