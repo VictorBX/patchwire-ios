@@ -26,7 +26,7 @@ public struct Command {
      
         - returns: A `Command` instance.
     */
-    init(command: String, data: [String: AnyObject]?) {
+    public init(command: String, data: [String: AnyObject]?) {
         self.command = command
         self.data = data ?? [String: AnyObject]()
     }
