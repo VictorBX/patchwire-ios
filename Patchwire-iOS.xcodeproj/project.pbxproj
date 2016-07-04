@@ -10,6 +10,12 @@
 		1C0927B11D29951300126D22 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0927B01D29951300126D22 /* Logger.swift */; };
 		1C3DF98C1BA13BCB00CD399C /* JSONParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3DF98B1BA13BCB00CD399C /* JSONParserTests.swift */; };
 		1C3DF9901BA15A7800CD399C /* PatchwireTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3DF98F1BA15A7800CD399C /* PatchwireTests.swift */; };
+		1C7C37B61D29BA4C00D3A7D4 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0927B01D29951300126D22 /* Logger.swift */; };
+		1C7C37B81D29BC2100D3A7D4 /* Notifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7C37B71D29BC2100D3A7D4 /* Notifier.swift */; };
+		1C7C37B91D29F87100D3A7D4 /* Notifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7C37B71D29BC2100D3A7D4 /* Notifier.swift */; };
+		1C7C37BF1D2A058900D3A7D4 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7C37BE1D2A058900D3A7D4 /* Command.swift */; };
+		1C7C37C31D2A115300D3A7D4 /* ChatCommandService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7C37C21D2A115300D3A7D4 /* ChatCommandService.swift */; };
+		1C7C37C41D2A184400D3A7D4 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7C37BE1D2A058900D3A7D4 /* Command.swift */; };
 		1CC57E291BA42C6700D9D79A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1CC57E281BA42C6700D9D79A /* Images.xcassets */; };
 		1CC57E361BA42C9500D9D79A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CC57E301BA42C9500D9D79A /* AppDelegate.swift */; };
 		1CC57E371BA42C9500D9D79A /* ChatContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CC57E311BA42C9500D9D79A /* ChatContainerViewController.swift */; };
@@ -41,6 +47,9 @@
 		1C0927B01D29951300126D22 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		1C3DF98B1BA13BCB00CD399C /* JSONParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONParserTests.swift; sourceTree = "<group>"; };
 		1C3DF98F1BA15A7800CD399C /* PatchwireTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PatchwireTests.swift; sourceTree = "<group>"; };
+		1C7C37B71D29BC2100D3A7D4 /* Notifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifier.swift; sourceTree = "<group>"; };
+		1C7C37BE1D2A058900D3A7D4 /* Command.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
+		1C7C37C21D2A115300D3A7D4 /* ChatCommandService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatCommandService.swift; path = client/ChatCommandService.swift; sourceTree = "<group>"; };
 		1CC57E281BA42C6700D9D79A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = client/Images.xcassets; sourceTree = "<group>"; };
 		1CC57E301BA42C9500D9D79A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = client/AppDelegate.swift; sourceTree = "<group>"; };
 		1CC57E311BA42C9500D9D79A /* ChatContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatContainerViewController.swift; path = client/ChatContainerViewController.swift; sourceTree = "<group>"; };
@@ -94,8 +103,8 @@
 		1C04BC271B9C25A4007CBF26 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				1C3DF98F1BA15A7800CD399C /* PatchwireTests.swift */,
 				1C3DF98B1BA13BCB00CD399C /* JSONParserTests.swift */,
+				1C3DF98F1BA15A7800CD399C /* PatchwireTests.swift */,
 				1C04BC281B9C25A4007CBF26 /* Supporting Files */,
 			);
 			path = Tests;
@@ -112,8 +121,10 @@
 		1CC57E161BA42A7100D9D79A /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				1C7C37BE1D2A058900D3A7D4 /* Command.swift */,
 				1C0927B01D29951300126D22 /* Logger.swift */,
 				1CC57E3C1BA42CD500D9D79A /* JSONParser.swift */,
+				1C7C37B71D29BC2100D3A7D4 /* Notifier.swift */,
 				1CC57E3D1BA42CD500D9D79A /* Patchwire.swift */,
 			);
 			path = Source;
@@ -123,10 +134,11 @@
 			isa = PBXGroup;
 			children = (
 				1CC57E301BA42C9500D9D79A /* AppDelegate.swift */,
-				1CC57E351BA42C9500D9D79A /* ViewController.swift */,
+				1C7C37C21D2A115300D3A7D4 /* ChatCommandService.swift */,
 				1CC57E311BA42C9500D9D79A /* ChatContainerViewController.swift */,
 				1CC57E321BA42C9500D9D79A /* ChatTableViewController.swift */,
 				1CC57E341BA42C9500D9D79A /* Message.swift */,
+				1CC57E351BA42C9500D9D79A /* ViewController.swift */,
 				1CC57E481BA501D100D9D79A /* Main.storyboard */,
 				1CC57E281BA42C6700D9D79A /* Images.xcassets */,
 				1CC57E461BA501D100D9D79A /* LaunchScreen.xib */,
@@ -245,13 +257,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C7C37C31D2A115300D3A7D4 /* ChatCommandService.swift in Sources */,
 				1CC57E361BA42C9500D9D79A /* AppDelegate.swift in Sources */,
 				1CC57E3E1BA42CD500D9D79A /* JSONParser.swift in Sources */,
 				1CC57E3F1BA42CD500D9D79A /* Patchwire.swift in Sources */,
+				1C7C37BF1D2A058900D3A7D4 /* Command.swift in Sources */,
 				1CC57E371BA42C9500D9D79A /* ChatContainerViewController.swift in Sources */,
 				1CC57E3B1BA42C9500D9D79A /* ViewController.swift in Sources */,
 				1CC57E3A1BA42C9500D9D79A /* Message.swift in Sources */,
 				1CC57E381BA42C9500D9D79A /* ChatTableViewController.swift in Sources */,
+				1C7C37B81D29BC2100D3A7D4 /* Notifier.swift in Sources */,
 				1C0927B11D29951300126D22 /* Logger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -260,8 +275,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C7C37B61D29BA4C00D3A7D4 /* Logger.swift in Sources */,
+				1C7C37B91D29F87100D3A7D4 /* Notifier.swift in Sources */,
 				1C3DF9901BA15A7800CD399C /* PatchwireTests.swift in Sources */,
 				1C3DF98C1BA13BCB00CD399C /* JSONParserTests.swift in Sources */,
+				1C7C37C41D2A184400D3A7D4 /* Command.swift in Sources */,
 				1CC57E411BA42CE300D9D79A /* JSONParser.swift in Sources */,
 				1CC57E401BA42CE000D9D79A /* Patchwire.swift in Sources */,
 			);

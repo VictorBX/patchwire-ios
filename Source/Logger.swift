@@ -6,7 +6,7 @@
 //  Copyright © 2016 Victor Barrera. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
 private enum LoggerStatus : String {
     case Info = "Info: "
@@ -14,21 +14,21 @@ private enum LoggerStatus : String {
     case Error = "Error: "
 }
 
-class Logger: NSObject {
+class Logger {
     
-    private static func log(withLog log: String, status: LoggerStatus) {
+    private func log(withLog log: String, status: LoggerStatus) {
         print(status.rawValue + log)
     }
     
-    static func info(withLog log: String) {
-        Logger.log(withLog: log, status: .Info)
+    func info(withLog log: String) {
+        self.log(withLog: log, status: .Info)
     }
     
-    static func success(withLog log: String) {
-        Logger.log(withLog: log, status: .Success)
+    func success(withLog log: String) {
+        self.log(withLog: log, status: .Success)
     }
     
-    static func error(withLog log: String) {
-        Logger.log(withLog: log, status: .Error)
+    func error(withLog log: String) {
+        self.log(withLog: log, status: .Error)
     }
 }

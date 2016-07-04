@@ -10,9 +10,9 @@ import UIKit
 
 class ChatTableViewController: UITableViewController {
 
-    var username : String = ""
-    var patchwire : Patchwire = Patchwire.sharedInstance()
-    var messages : [Message] = []
+    private let patchwire = Patchwire.sharedInstance
+    var username = ""
+    var messages = [Message]()
     
     
     // MARK: - Init
@@ -21,20 +21,15 @@ class ChatTableViewController: UITableViewController {
         super.viewDidLoad()
         
         // Tableview settings
-        self.tableView.tableFooterView = UIView(frame: CGRectZero)
-        self.tableView.estimatedRowHeight = 50
-        self.tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.tableFooterView = UIView(frame: CGRectZero)
+        tableView.estimatedRowHeight = 50
+        tableView.rowHeight = UITableViewAutomaticDimension
         
         // Register for Patchwire notifications
-        let chatCommandKey : String = patchwire.getNotificationKey(command: "chat")
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatTableViewController.didReceiveChatCommand(_:)), name: chatCommandKey, object: nil)
-        let logoutCommandKey : String = patchwire.getNotificationKey(command: "logout")
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatTableViewController.didReceiveLogoutCommand(_:)), name: logoutCommandKey, object: nil)
+        registerNotifications()
         
         // Register user
-        let registerDictionary : Dictionary<String,AnyObject> = Dictionary(dictionaryLiteral: ("username", username))
-        patchwire.sendCommand("register", withData: registerDictionary)
-        
+        patchwire.sendCommand(ChatCommandService.registerCommand(withUsername: username))
     }
     
     override func didReceiveMemoryWarning() {
@@ -43,7 +38,7 @@ class ChatTableViewController: UITableViewController {
     }
 
     
-    // MARK: - Table view data source
+    // MARK: - Table View Data Source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
@@ -63,36 +58,47 @@ class ChatTableViewController: UITableViewController {
     // MARK: - Patchwire Notifications
     
     func didReceiveChatCommand(notification: NSNotification) {
-        NSLog("\nDid Receive chat command")
-        if let info = notification.userInfo {
-            self.addNewMessageUsingInfo(info)
-        }
+        guard let info = notification.userInfo else { return }
+        addNewMessageUsingInfo(info)
     }
     
     func didReceiveLogoutCommand(notification: NSNotification) {
-        NSLog("\nDid Receive logout command")
-        if let info = notification.userInfo {
-            self.addNewMessageUsingInfo(info)
-        }
+        guard let info = notification.userInfo else { return }
+        addNewMessageUsingInfo(info)
     }
     
     private func addNewMessageUsingInfo(info: Dictionary<NSObject, AnyObject>) {
-        let newMessage : Message = Message(json: info)
+        let newMessage = Message(json: info)
         messages.append(newMessage)
         
-        self.tableView.beginUpdates()
-        self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: messages.count-1, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Bottom)
-        self.tableView.endUpdates()
-        self.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: messages.count-1, inSection: 0), atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
+        tableView.beginUpdates()
+        tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: messages.count-1, inSection: 0)], withRowAnimation: .Bottom)
+        tableView.endUpdates()
+        tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: messages.count-1, inSection: 0), atScrollPosition: .Bottom, animated: true)
     }
     
     
-    deinit {
-        // Remove notifications
-        let chatCommandKey : String = patchwire.getNotificationKey(command: "chat")
+    //MARK: - Notifications
+    
+    private func registerNotifications() {
+        let chatCommandKey = patchwire.notificationKey(forCommand: ChatCommand.Chat.rawValue)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatTableViewController.didReceiveChatCommand(_:)), name: chatCommandKey, object: nil)
+        let logoutCommandKey = patchwire.notificationKey(forCommand: ChatCommand.Logout.rawValue)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatTableViewController.didReceiveLogoutCommand(_:)), name: logoutCommandKey, object: nil)
+    }
+    
+    private func unregisterNotifications() {
+        let chatCommandKey : String = patchwire.notificationKey(forCommand: ChatCommand.Chat.rawValue)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: chatCommandKey, object: nil)
-        let logoutCommandKey : String = patchwire.getNotificationKey(command: "logout")
+        let logoutCommandKey : String = patchwire.notificationKey(forCommand: ChatCommand.Logout.rawValue)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: logoutCommandKey, object: nil)
+    }
+    
+    
+    //MARK: - Deinit
+    
+    deinit {
+        unregisterNotifications()
     }
 }
 
@@ -104,7 +110,7 @@ class ChatCell: UITableViewCell {
     @IBOutlet weak var messageLabel: UILabel!
     
     override func awakeFromNib() {
-        self.selectionStyle = UITableViewCellSelectionStyle.None
+        selectionStyle = UITableViewCellSelectionStyle.None
     }
     
     func configure(message: Message) {

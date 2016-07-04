@@ -23,9 +23,9 @@ class PatchwireTests: XCTestCase {
     
     func testConfigure() {
         // Given
-        let patchwire : Patchwire = Patchwire()
-        let ip : String = "localhost"
-        let port : Int = 3002
+        let patchwire = Patchwire()
+        let ip = "localhost"
+        let port = 3002
         
         // When
         patchwire.configure(serverIP: ip, serverPort: port)
@@ -37,15 +37,17 @@ class PatchwireTests: XCTestCase {
     
     func testGetNotificationKeyForCommands() {
         // Given
-        let patchwire : Patchwire = Patchwire()
+        let patchwire = Patchwire()
         
         // When
-        let chatNotificationKey = patchwire.getNotificationKey(command: "chat")
-        let updatePlayerNotificationKey = patchwire.getNotificationKey(command: "updatePlayer")
+        let chatNotificationKey = patchwire.notificationKey(forCommand: "chat")
+        let updatePlayerNotificationKey = patchwire.notificationKey(forCommand: "updatePlayer")
+        let collectCoingNotificationKey = patchwire.notificationKey(forCommand: "collect coin")
         
         // Then
         XCTAssertEqual("com.patchwire.command.chat", chatNotificationKey, "'chat' notification key")
         XCTAssertEqual("com.patchwire.command.updatePlayer", updatePlayerNotificationKey, "'updatePlayer' notification key")
+        XCTAssertEqual("com.patchwire.command.collect coin", collectCoingNotificationKey, "'collect coin' notification key")
     }
     
 

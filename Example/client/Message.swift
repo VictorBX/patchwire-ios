@@ -12,28 +12,28 @@ enum MessageType: Int {
     case Normal = 0, Joined, Left
 }
 
-class Message: NSObject {
+class Message {
     
     var user : String
     var message : String
     var type : MessageType
     
-    init(json: Dictionary<NSObject, AnyObject>) {
+    init(json: [NSObject: AnyObject]) {
         
         self.user = ""
         self.message = ""
         self.type = .Normal
         
-        if let _user = json["username"] as? String {
-            self.user = _user
+        if let user = json["username"] as? String {
+            self.user = user
         }
         
-        if let _message = json["message"] as? String {
-            self.message = _message
+        if let message = json["message"] as? String {
+            self.message = message
         }
         
-        if let _type : Int = json["type"] as? Int {
-            type = MessageType(rawValue: _type) ?? .Normal
+        if let type = json["type"] as? Int {
+            self.type = MessageType(rawValue: type) ?? .Normal
         }
     }
     
@@ -41,25 +41,25 @@ class Message: NSObject {
         switch type {
         case .Normal:
             return self.user + " : " + self.message
-        case .Joined, .Left:
+        default:
             return self.message
         }
     }
     
     func attributedDisplayMessage() -> NSAttributedString {
         
-        var attributeDictionary : Dictionary<String, AnyObject> = Dictionary()
+        var attributeDictionary = [String: AnyObject]()
         
         switch self.type {
         case .Normal:
             attributeDictionary[NSForegroundColorAttributeName] = UIColor(red: 34.0/256, green: 38.0/255, blue: 38.0/255, alpha: 1.0)
             attributeDictionary[NSFontAttributeName] = UIFont.systemFontOfSize(17)
-        case .Joined, .Left:
+        default:
             attributeDictionary[NSForegroundColorAttributeName] = UIColor.grayColor()
             attributeDictionary[NSFontAttributeName] = UIFont.italicSystemFontOfSize(17)
         }
         
-        let attributedString : NSMutableAttributedString = NSMutableAttributedString(string: displayMessage(), attributes: attributeDictionary)
+        let attributedString = NSMutableAttributedString(string: displayMessage(), attributes: attributeDictionary)
         return attributedString.copy() as! NSAttributedString
     }
 }
