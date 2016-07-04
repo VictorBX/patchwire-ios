@@ -54,13 +54,23 @@ NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatT
 
 The `NSNotification`'s `userInfo` dictionary will contain the JSON blob sent from the server.
 
+#### Receiving IO Stream Events
+As the client sends and receives events from the server, the input and output streams send out a message when certain events are triggered. To get those `NSStreamEvent`s from `NSStreamDelegate`'s `- stream:handleEvent:`, you will need to use `NSNotificationCenter`. A notification will be sent out by the notification center with names from the `PatchwireStreamEventKey` enum. The `userInfo` dictionary will contain the stream event.
+```swift
+// Receiving input stream events
+NSNotificationCenter.defaultCenter().addObserver(self, selector: ViewController.didReceiveInputStreamEvent(_:), name: PatchwireStreamEventKey.InputStreamEvent.rawValue, object: nil)
+
+// Receiving output stream events
+NSNotificationCenter.defaultCenter().addObserver(self, selector: ViewController.didReceiveOutputStreamEvent(_:), name: PatchwireStreamEventKey.OutputStreamEvent.rawValue, object: nil)
+```
+
 #### Disconnect/Reconnect
 ```swift
 // To disconnect from the server
 Patchwire.sharedInstance.disconnect()
 
 // To reconnect to the server
-Patchwire.sharedInstance.reconnect()
+Patchwire.sharedInstance.reconnect(connectAfterSeconds: 5)
 ```
 
 ## Example Chat Project
