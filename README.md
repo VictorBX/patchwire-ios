@@ -11,7 +11,7 @@ iOS Library for the [Patchwire](https://github.com/twisterghost/patchwire) multi
 ## Installation
 
 #### Carthage
-[Carthage](https://github.com/Carthage/Carthage) is a easy to use dependency manager. Once you have [installed](https://github.com/Carthage/Carthage#installing-carthage) Carthage, create a [Cartfile](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos) with the following:
+[Carthage](https://github.com/Carthage/Carthage) is an easy to use dependency manager. Once you have [installed](https://github.com/Carthage/Carthage#installing-carthage) Carthage, create a [Cartfile](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos) with the following:
 
 ```
 github "VictorBX/patchwire-ios"
