@@ -12,22 +12,22 @@ import Foundation
 public struct Command {
     
     /// The command name.
-    public var command : String
+    public var name : String
     
     /// Additional data to be sent with the command.
-    public var data : [String: AnyObject]
+    public var data : [String: Any]
     
     
     /**
         Initialize the `Command` with name of command and additional data.
      
-        - parameter command:  Name of the command.
+        - parameter name:     Name of the command.
         - parameter data:     Additional data to be sent to with the command.
      
         - returns: A `Command` instance.
     */
-    public init(command: String, data: [String: AnyObject]?) {
-        self.command = command
-        self.data = data ?? [String: AnyObject]()
+    public init(name: String, data: [String: Any]?) {
+        self.name = name
+        self.data = data ?? [:]
     }
 }

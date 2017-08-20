@@ -10,9 +10,9 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    @IBOutlet weak var usernameTextField: UITextField!
+    @IBOutlet private weak var usernameTextField: UITextField!
     
-    var patchwire = Patchwire.sharedInstance
+    private let patchwire = Patchwire.sharedInstance
     
     
     // MARK: - Init
@@ -23,20 +23,15 @@ class ViewController: UIViewController {
         // Nav bar title
         navigationItem.title = "Patchwire"
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }    
     
     
     // MARK: - Enter button
     
-    @IBAction func didSelectEnterButton(sender: AnyObject) {
-        guard let username = usernameTextField.text where username.characters.count > 0 else { return }
+    @IBAction func didSelectEnterButton(_ sender: AnyObject) {
+        guard let username = usernameTextField.text, username.characters.count > 0 else { return }
         
         // Push to chat controller
-        if let chatController = ChatContainerViewController.chatContainer(withUsername: username) {
+        if let chatController = ChatContainerViewController.chatContainer(username: username) {
             navigationController?.pushViewController(chatController, animated: true)
         }
     }

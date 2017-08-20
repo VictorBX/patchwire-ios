@@ -8,46 +8,48 @@
 
 import Foundation
 
-private enum Brace : Character {
-    case Open = "{"
-    case Close = "}"
-}
-
 class JSONParser {
     
+    private enum Brace : Character {
+        case open = "{"
+        case close = "}"
+    }
+    
     // JSON 
-    private(set) var openBraces = 0
-    private(set) var storedJSONString = ""
+    private (set) var openBraces = 0
+    private (set) var storedJSONString = ""
     
     // Debug Logger
     private var logger : Logger?
-    var verboseLogging : Bool = false {
+    var verboseLogging = false {
         didSet {
-            logger = verboseLogging ? Logger() : nil
+            logger = verboseLogging && logger == nil ? Logger() : nil
         }
     }
     
-    func append(JSONString: String) -> [AnyObject] {
-        var JSONArray = [AnyObject]()
-        guard JSONString.characters.count > 0 else { return JSONArray }
+    func append(json: String) -> [Any] {
+        guard json.characters.count > 0 else { return [] }
+        var JSONArray = [Any]()
         
         // Start index
         var startIndex = 0
         
         // Go through string and find open/close braces
-        for (index, character) in JSONString.characters.enumerate() {
+        for (index, character) in json.characters.enumerated() {
             guard let brace = Brace(rawValue: character) else { continue }
             
             switch brace {
-            case .Open:
+            case .open:
                 openBraces += 1
-            case .Close:
+            case .close:
                 openBraces -= 1
                 
                 if openBraces == 0 {
-                    let range = JSONString.startIndex.advancedBy(startIndex)..<JSONString.startIndex.advancedBy(index+1)
-                    storedJSONString = storedJSONString + JSONString.substringWithRange(range)
-                    if let JSONDictionary = convertJSONStringToDictionary(storedJSONString) {
+                    let range = json.characters.index(json.startIndex, offsetBy: startIndex)..<json.characters.index(json.startIndex, offsetBy: index+1)
+                    
+                    storedJSONString = storedJSONString + json.substring(with: range)
+                    
+                    if let JSONDictionary = convertToDictionary(json: storedJSONString) {
                         JSONArray.append(JSONDictionary)
                         storedJSONString = ""
                         startIndex = index + 1
@@ -58,21 +60,22 @@ class JSONParser {
         }
         
         // Store remaining json for later use
-        storedJSONString = storedJSONString + JSONString.substringFromIndex(JSONString.startIndex.advancedBy(startIndex))
+        storedJSONString = storedJSONString + json.substring(from: json.characters.index(json.startIndex, offsetBy: startIndex))
         
         return JSONArray
     }
     
-    private func convertJSONStringToDictionary(JSONString: String) -> [String:AnyObject]? {
-        if let data = JSONString.dataUsingEncoding(NSUTF8StringEncoding) {
-            do {
-                let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? [String: AnyObject]
-                return json
-            } catch {
-                logger?.error(withLog: "Can not convert JSON string to dictionary - \(JSONString)")
-            }
+    private func convertToDictionary(json: String) -> [String: Any]? {
+        guard let data = json.data(using: .utf8) else {
+            return nil
         }
-        return nil
+        
+        do {
+            return try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any]
+        } catch {
+            logger?.error(message: "Can not convert JSON string to dictionary - \(json)")
+            return nil
+        }
     }
     
 }

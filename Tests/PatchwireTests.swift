@@ -37,12 +37,14 @@ class PatchwireTests: XCTestCase {
     
     func testGetNotificationKeyForCommands() {
         // Given
-        let patchwire = Patchwire()
+        let chat = "chat"
+        let updatePlayer = "updatePlayer"
+        let collectCoin = "collect coin"
         
         // When
-        let chatNotificationKey = patchwire.notificationKey(forCommand: "chat")
-        let updatePlayerNotificationKey = patchwire.notificationKey(forCommand: "updatePlayer")
-        let collectCoingNotificationKey = patchwire.notificationKey(forCommand: "collect coin")
+        let chatNotificationKey = Patchwire.notificationKey(command: chat)
+        let updatePlayerNotificationKey = Patchwire.notificationKey(command: updatePlayer)
+        let collectCoingNotificationKey = Patchwire.notificationKey(command: collectCoin)
         
         // Then
         XCTAssertEqual("com.patchwire.command.chat", chatNotificationKey, "'chat' notification key")

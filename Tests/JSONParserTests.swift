@@ -27,7 +27,7 @@ class JSONParserTests: XCTestCase {
         let validJSONString = "{\"a\":\"1\"}"
         
         // When
-        let jsonBlobs = jsonParser.append(validJSONString)
+        let jsonBlobs = jsonParser.append(json: validJSONString)
         
         // Then
         XCTAssertEqual(1, jsonBlobs.count, "Valid JSON, must return 1 JSON blob.")
@@ -42,7 +42,7 @@ class JSONParserTests: XCTestCase {
         let invalidJSONString = "{\"a\""
         
         // When
-        let jsonBlobs = jsonParser.append(invalidJSONString)
+        let jsonBlobs = jsonParser.append(json: invalidJSONString)
         
         // Then
         XCTAssertEqual(0, jsonBlobs.count, "Invalid JSON, must return 0 JSON blobs.")
@@ -57,8 +57,8 @@ class JSONParserTests: XCTestCase {
         let valueJSONChunk = "\"1\"}{\"b\":\"2\"}"
         
         // When
-        var jsonBlobs = jsonParser.append(keyJSONChunk)
-        jsonBlobs = jsonParser.append(valueJSONChunk)
+        var jsonBlobs = jsonParser.append(json: keyJSONChunk)
+        jsonBlobs = jsonParser.append(json: valueJSONChunk)
         
         // Then
         XCTAssertEqual(2, jsonBlobs.count, "Valid JSON chunks, must return 2 JSON blobs.")
@@ -73,8 +73,8 @@ class JSONParserTests: XCTestCase {
         let valueJSONChunk = "\"1\"}{\"b\":\"2\""
         
         // When
-        var jsonBlobs = jsonParser.append(keyJSONChunk)
-        jsonBlobs = jsonParser.append(valueJSONChunk)
+        var jsonBlobs = jsonParser.append(json: keyJSONChunk)
+        jsonBlobs = jsonParser.append(json: valueJSONChunk)
         
         // Then
         XCTAssertEqual(1, jsonBlobs.count, "1 Valid JSON blob")
@@ -89,8 +89,8 @@ class JSONParserTests: XCTestCase {
         let valueJSONChunk = "\"1\"}{\"b\":{\"c\":\"2\"},\"d\":\"3\"}"
         
         // When
-        var jsonBlobs = jsonParser.append(keyJSONChunk)
-        jsonBlobs = jsonParser.append(valueJSONChunk)
+        var jsonBlobs = jsonParser.append(json: keyJSONChunk)
+        jsonBlobs = jsonParser.append(json: valueJSONChunk)
         
         // Then
         XCTAssertEqual(2, jsonBlobs.count, "2 Valid JSON blobs")
@@ -105,8 +105,8 @@ class JSONParserTests: XCTestCase {
         let valueJSONChunk = "\"1\"}{\"b\":{\"c\":\"2\"},\"d\":\"3\"}{\"e\":{"
         
         // When
-        var jsonBlobs = jsonParser.append(keyJSONChunk)
-        jsonBlobs = jsonParser.append(valueJSONChunk)
+        var jsonBlobs = jsonParser.append(json: keyJSONChunk)
+        jsonBlobs = jsonParser.append(json: valueJSONChunk)
         
         // Then
         XCTAssertEqual(2, jsonBlobs.count, "2 Valid JSON blobs")

@@ -8,24 +8,40 @@
 
 import Foundation
 
-enum ChatCommand : String {
-    case Register = "register"
-    case Logout = "logout"
-    case Chat = "chat"
-}
+class ChatCommandService {
 
-class ChatCommandService: NSObject {
-
-    static func registerCommand(withUsername username: String) -> Command {
-        return Command(command: ChatCommand.Register.rawValue, data: ["username": username])
+    enum ChatCommand : String {
+        case register = "register"
+        case logout = "logout"
+        case chat = "chat"
     }
     
-    static func logoutCommand(withUsername username: String) -> Command {
-        return Command(command: ChatCommand.Logout.rawValue, data: ["username": username])
+    static func registerCommand(username: String) -> Command {
+        return Command(
+            name: ChatCommand.register.rawValue,
+            data: [
+                "username": username
+            ]
+        )
     }
     
-    static func chatCommand(withUsername username: String, message: String) -> Command {
-        return Command(command: ChatCommand.Chat.rawValue, data: ["username": username, "message": message])
+    static func logoutCommand(username: String) -> Command {
+        return Command(
+            name: ChatCommand.logout.rawValue,
+            data: [
+                "username": username
+            ]
+        )
+    }
+    
+    static func chatCommand(username: String, message: String) -> Command {
+        return Command(
+            name: ChatCommand.chat.rawValue,
+            data: [
+                "username": username,
+                "message": message
+            ]
+        )
     }
     
 }

@@ -11,22 +11,22 @@ import UIKit
 class ChatContainerViewController: UIViewController, UITextFieldDelegate {
     
     // Input
-    @IBOutlet weak var inputTextField: UITextField!
-    @IBOutlet weak var sendButton: UIButton!
-    @IBOutlet weak var inputViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var inputViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var inputTextField: UITextField!
+    @IBOutlet private weak var sendButton: UIButton!
+    @IBOutlet private weak var inputViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var inputViewBottomConstraint: NSLayoutConstraint!
     
     // Defaults
     private let patchwire = Patchwire.sharedInstance
+    private let notificationCenter = NotificationCenter.default
     private let chatSegueName = "chatSegue"
     private var username = ""
     
-    
     // MARK: - Init
     
-    class func chatContainer(withUsername username: String) -> ChatContainerViewController? {
-        let sb = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-        if let chatController = sb.instantiateViewControllerWithIdentifier("chatContainer") as? ChatContainerViewController {
+    class func chatContainer(username: String) -> ChatContainerViewController? {
+        let sb = UIStoryboard(name: "Main", bundle: Bundle.main)
+        if let chatController = sb.instantiateViewController(withIdentifier: "chatContainer") as? ChatContainerViewController {
             chatController.username = username
             return chatController
         }
@@ -40,28 +40,23 @@ class ChatContainerViewController: UIViewController, UITextFieldDelegate {
         registerNotifications()
     }
     
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
         // User has left the game
-        patchwire.sendCommand(ChatCommandService.logoutCommand(withUsername: username))
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        patchwire.send(command: ChatCommandService.logoutCommand(username: username))
     }
     
     
     //MARK: - Chat Table View Controller
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        super.prepareForSegue(segue, sender: sender)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
         
         let segueName = segue.identifier
         
-        if let segueName = segueName where segueName == chatSegueName {
-            if let chatTableController = segue.destinationViewController as? ChatTableViewController {
+        if let segueName = segueName, segueName == chatSegueName {
+            if let chatTableController = segue.destination as? ChatTableViewController {
                 chatTableController.username = username
                 chatTableController.tableView.contentInset = UIEdgeInsetsMake(0, 0, inputViewHeightConstraint.constant, 0)
             }
@@ -71,32 +66,36 @@ class ChatContainerViewController: UIViewController, UITextFieldDelegate {
     
     //MARK: - Input
     
-    @IBAction func didSelectSendButton(sender: AnyObject) {
+    @IBAction func didSelectSendButton(_ sender: AnyObject) {
         // Send chat event
-        patchwire.sendCommand(ChatCommandService.chatCommand(withUsername: username, message: inputTextField.text ?? ""))
+        patchwire.send(command: ChatCommandService.chatCommand(
+                username: username,
+                message: inputTextField.text ?? ""
+            )
+        )
         inputTextField.text = ""
     }
     
     
     //MARK: - Keyboard
     
-    func keyboardWillShow(notification: NSNotification) {
+    func keyboardWillShow(_ notification: Notification) {
         if let info = notification.userInfo {
-            if let keyboardInfo: AnyObject = info[UIKeyboardFrameEndUserInfoKey] {
-                let keyboardHeight = keyboardInfo.CGRectValue.height
+            if let keyboardInfo = info[UIKeyboardFrameEndUserInfoKey] {
+                let keyboardHeight = (keyboardInfo as AnyObject).cgRectValue.height
                 view.layoutIfNeeded()
                 inputViewBottomConstraint.constant = keyboardHeight
-                UIView.animateWithDuration(1, animations: { () -> Void in
+                UIView.animate(withDuration: 1, animations: { () -> Void in
                     self.view.layoutIfNeeded()
                 });
             }
         }
     }
     
-    func keyboardWillHide(notification: NSNotification) {
+    func keyboardWillHide(_ notification: Notification) {
         view.layoutIfNeeded()
         inputViewBottomConstraint.constant = 0
-        UIView.animateWithDuration(1, animations: { () -> Void in
+        UIView.animate(withDuration: 1, animations: { () -> Void in
             self.view.layoutIfNeeded()
         });
     }
@@ -104,22 +103,17 @@ class ChatContainerViewController: UIViewController, UITextFieldDelegate {
     
     //MARK: - Notifications
     
-    private func registerNotifications() {
+    fileprivate func registerNotifications() {
         // Keyboard notifications
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatContainerViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ChatContainerViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
-    }
-    
-    private func unregisterNotifications() {
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(ChatContainerViewController.keyboardWillShow(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(ChatContainerViewController.keyboardWillHide(_:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     
     //MARK: - Deinit
     
     deinit {
-        unregisterNotifications()
+        notificationCenter.removeObserver(self)
     }
     
 

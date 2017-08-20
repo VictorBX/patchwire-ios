@@ -8,27 +8,27 @@
 
 import Foundation
 
-private enum LoggerStatus : String {
-    case Info = "Info: "
-    case Success = "Success: "
-    case Error = "Error: "
-}
-
 class Logger {
     
-    private func log(withLog log: String, status: LoggerStatus) {
-        print(status.rawValue + log)
+    private enum Status : String {
+        case info = "Info"
+        case success = "Success"
+        case error = "Error"
     }
     
-    func info(withLog log: String) {
-        self.log(withLog: log, status: .Info)
+    func info(message: String) {
+        log(message: message, status: .info)
     }
     
-    func success(withLog log: String) {
-        self.log(withLog: log, status: .Success)
+    func success(message: String) {
+        log(message: message, status: .success)
     }
     
-    func error(withLog log: String) {
-        self.log(withLog: log, status: .Error)
+    func error(message: String) {
+        log(message: message, status: .error)
+    }
+    
+    private func log(message: String, status: Status) {
+        print(status.rawValue + ": " + message)
     }
 }

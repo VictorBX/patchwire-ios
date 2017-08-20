@@ -8,41 +8,31 @@
 
 import UIKit
 
-enum MessageType: Int {
-    case Normal = 0, Joined, Left
-}
-
 class Message {
+    
+    enum MessageType: Int {
+        case normal
+        case joined
+        case left
+    }
     
     var user : String
     var message : String
     var type : MessageType
     
-    init(json: [NSObject: AnyObject]) {
+    init(json: [String: Any]) {
         
-        self.user = ""
-        self.message = ""
-        self.type = .Normal
-        
-        if let user = json["username"] as? String {
-            self.user = user
-        }
-        
-        if let message = json["message"] as? String {
-            self.message = message
-        }
-        
-        if let type = json["type"] as? Int {
-            self.type = MessageType(rawValue: type) ?? .Normal
-        }
+        self.user = json["username"] as? String ?? ""
+        self.message = json["message"] as? String ?? ""
+        self.type = MessageType(rawValue: json["type"] as? Int ?? 0) ?? .normal
     }
     
     func displayMessage() -> String {
         switch type {
-        case .Normal:
-            return self.user + " : " + self.message
+        case .normal:
+            return user + " : " + message
         default:
-            return self.message
+            return message
         }
     }
     
@@ -51,12 +41,12 @@ class Message {
         var attributeDictionary = [String: AnyObject]()
         
         switch self.type {
-        case .Normal:
+        case .normal:
             attributeDictionary[NSForegroundColorAttributeName] = UIColor(red: 34.0/256, green: 38.0/255, blue: 38.0/255, alpha: 1.0)
-            attributeDictionary[NSFontAttributeName] = UIFont.systemFontOfSize(17)
+            attributeDictionary[NSFontAttributeName] = UIFont.systemFont(ofSize: 17)
         default:
-            attributeDictionary[NSForegroundColorAttributeName] = UIColor.grayColor()
-            attributeDictionary[NSFontAttributeName] = UIFont.italicSystemFontOfSize(17)
+            attributeDictionary[NSForegroundColorAttributeName] = UIColor.gray
+            attributeDictionary[NSFontAttributeName] = UIFont.italicSystemFont(ofSize: 17)
         }
         
         let attributedString = NSMutableAttributedString(string: displayMessage(), attributes: attributeDictionary)

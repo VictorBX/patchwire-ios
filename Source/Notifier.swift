@@ -10,19 +10,23 @@ import Foundation
 
 class Notifier {
 
-    private let commandKeyPrefix = "com.patchwire.command."
-    private let notificationCenter : NSNotificationCenter
+    private static let commandKeyPrefix = "com.patchwire.command."
+    private let notificationCenter : NotificationCenter
     
-    init(notificationCenter: NSNotificationCenter) {
+    init(notificationCenter: NotificationCenter) {
         self.notificationCenter = notificationCenter
     }
     
-    func getNotificationKey(forCommand command: String) -> String {
+    static func getNotificationKey(command: String) -> String {
         return commandKeyPrefix + command
     }
     
-    func postCommand(command: Command) {
-        let commandNotification = getNotificationKey(forCommand: command.command)
-        notificationCenter.postNotificationName(commandNotification, object: nil, userInfo: command.data)
+    func post(command: Command) {
+        let commandNotification = Notifier.getNotificationKey(command: command.name)
+        notificationCenter.post(
+            name: Notification.Name(rawValue: commandNotification),
+            object: nil,
+            userInfo: command.data
+        )
     }
 }

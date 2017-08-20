@@ -15,23 +15,23 @@ public class Patchwire: NSObject {
     public static let sharedInstance = Patchwire()
     
     /// The IP of the Patchwire server.
-    private(set) var serverIP = "localhost"
+    private (set) var serverIP = "localhost"
     
     /// The port of the Patchwire server.
-    private(set) var serverPort = 3001
+    private (set) var serverPort = 3001
     
     // JSON Parser
-    private let jsonParser : JSONParser
+    fileprivate let jsonParser : JSONParser
     
     // Notifier
-    private let notifier : Notifier
+    fileprivate let notifier : Notifier
     
     // Logger
-    private var logger : Logger?
+    fileprivate var logger : Logger?
     
     // Streams
-    private var inputStream : NSInputStream?
-    private var outputStream : NSOutputStream?
+    fileprivate var inputStream : InputStream?
+    fileprivate var outputStream : OutputStream?
     
     /// Enables verbose logging for additional debugging.
     public var verboseLogging : Bool = false {
@@ -46,7 +46,7 @@ public class Patchwire: NSObject {
     
     override init() {
         jsonParser = JSONParser()
-        notifier = Notifier(notificationCenter: NSNotificationCenter.defaultCenter())
+        notifier = Notifier(notificationCenter: NotificationCenter.default)
         super.init()
     }
     
@@ -59,51 +59,51 @@ public class Patchwire: NSObject {
         - parameter serverIP:    Sets the IP of the server.
         - parameter serverPort:  Sets the port the server is listening to.
     */
-    public func configure(serverIP serverIP: String, serverPort: Int) {
+    public func configure(serverIP: String, serverPort: Int) {
         self.serverIP = serverIP
         self.serverPort = serverPort
         
-        logger?.info(withLog: "Configuring with server IP: \(self.serverIP)")
-        logger?.info(withLog: "Configuring with server Port: \(self.serverPort)")
+        logger?.info(message: "Configuring with server IP: \(self.serverIP)")
+        logger?.info(message: "Configuring with server Port: \(self.serverPort)")
     }
     
     
     /// Connect to the server with the configured IP address and port.
     public func connect() {
         
-        logger?.info(withLog: "Trying to connect to: \(serverIP):\(serverPort)")
+        logger?.info(message: "Trying to connect to: \(serverIP):\(serverPort)")
         
-        NSStream.getStreamsToHostWithName(serverIP, port: serverPort, inputStream: &inputStream, outputStream: &outputStream)
+        Stream.getStreamsToHost(withName: serverIP, port: serverPort, inputStream: &inputStream, outputStream: &outputStream)
         inputStream?.delegate = self
         outputStream?.delegate = self
-        inputStream?.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode)
-        outputStream?.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode)
+        inputStream?.schedule(in: RunLoop.current, forMode: RunLoopMode.defaultRunLoopMode)
+        outputStream?.schedule(in: RunLoop.current, forMode: RunLoopMode.defaultRunLoopMode)
         inputStream?.open()
         outputStream?.open()
         
-        logger?.success(withLog: "Finished opening IO stream")
+        logger?.success(message: "Finished opening IO stream")
     }
     
     
     /// Disconnect from the server.
     public func disconnect() {
         
-        logger?.info(withLog: "Disconnecting from: \(serverIP):\(serverPort)")
+        logger?.info(message: "Disconnecting from: \(serverIP):\(serverPort)")
         
         if let _inputStream = inputStream {
             _inputStream.delegate = nil
-            _inputStream.removeFromRunLoop(NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode)
+            _inputStream.remove(from: RunLoop.current, forMode: RunLoopMode.defaultRunLoopMode)
             _inputStream.close()
             inputStream = nil
         }
         if let _outputStream = outputStream {
             _outputStream.delegate = nil
-            _outputStream.removeFromRunLoop(NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode)
+            _outputStream.remove(from: RunLoop.current, forMode: RunLoopMode.defaultRunLoopMode)
             _outputStream.close()
             outputStream = nil
         }
         
-        logger?.success(withLog: "Finished closing IO stream")
+        logger?.success(message: "Finished closing IO stream")
     }
     
     
@@ -112,9 +112,9 @@ public class Patchwire: NSObject {
      
         - parameter seconds: The amount of time (in seconds) the client will wait until connecting to the server after disconnecting.
     */
-    public func reconnect(connectAfterSeconds seconds: UInt64) {
+    public func reconnect(seconds: UInt64) {
         disconnect()
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(seconds * NSEC_PER_SEC)), dispatch_get_main_queue()) { () -> Void in
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(seconds * NSEC_PER_SEC)) / Double(NSEC_PER_SEC)) { () -> Void in
             self.connect()
         }
     }
@@ -127,23 +127,23 @@ public class Patchwire: NSObject {
      
         - parameter command: A `Command` object containing the command name and additional data.
     */
-    public func sendCommand(command: Command) {
-        var sendDictionary = [String: AnyObject]()
-        sendDictionary["command"] = command.command
+    public func send(command: Command) {
+        var sendDictionary = [String: Any]()
+        sendDictionary["command"] = command.name
         for key in command.data.keys {
             sendDictionary[key] = command.data[key]
         }
         
-        var jsonData : NSData? = nil
+        var jsonData : Data? = nil
         do {
-            jsonData = try NSJSONSerialization.dataWithJSONObject(sendDictionary, options: NSJSONWritingOptions())
+            jsonData = try JSONSerialization.data(withJSONObject: sendDictionary, options: JSONSerialization.WritingOptions())
         } catch let error as NSError {
-            logger?.error(withLog: "Failed parsing - \(error.description)")
+            logger?.error(message: "Failed parsing - \(error.description)")
         }
         
         if let jsonData = jsonData {
-            logger?.info(withLog: "Sending command - \(command)")
-            outputStream?.write(UnsafePointer<UInt8>(jsonData.bytes), maxLength: jsonData.length)
+            logger?.info(message: "Sending command - \(command)")
+            outputStream?.write((jsonData as NSData).bytes.bindMemory(to: UInt8.self, capacity: jsonData.count), maxLength: jsonData.count)
         }
     }
     
@@ -153,8 +153,8 @@ public class Patchwire: NSObject {
      
         - parameter command: The command string that will be turned into a key.
     */
-    public func notificationKey(forCommand command: String) -> String {
-        return notifier.getNotificationKey(forCommand: command)
+    public static func notificationKey(command: String) -> String {
+        return Notifier.getNotificationKey(command: command)
     }
 }
 
@@ -168,80 +168,86 @@ public enum PatchwireStreamEventKey : String {
     case OutputStreamEvent = "com.patchwire.outputstreamevent"
 }
 
-extension Patchwire: NSStreamDelegate {
+extension Patchwire: StreamDelegate {
     
     // Handle stream data
-    public func stream(aStream: NSStream, handleEvent eventCode: NSStreamEvent) {
+    public func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
         switch eventCode {
-        case NSStreamEvent.OpenCompleted:
-            logger?.info(withLog: "Stream opened")
-        case NSStreamEvent.HasBytesAvailable:
-            logger?.info(withLog: "Stream incoming data")
-            handleStream(aStream)
-        case NSStreamEvent.ErrorOccurred:
-            logger?.error(withLog: "Stream error occured")
-        case NSStreamEvent.EndEncountered:
-            logger?.info(withLog: "End of stream")
+        case Stream.Event.openCompleted:
+            logger?.info(message: "Stream opened")
+        case Stream.Event.hasBytesAvailable:
+            logger?.info(message: "Stream incoming data")
+            parse(stream: aStream)
+        case Stream.Event.errorOccurred:
+            logger?.error(message: "Stream error occured")
+        case Stream.Event.endEncountered:
+            logger?.info(message: "End of stream")
             disconnect()
         default:
-            logger?.info(withLog: "Unknown stream event")
+            logger?.info(message: "Unknown stream event")
         }
         
         // Stream event notifications
         let eventCodeKey = "eventCode"
-        if let inputStream = inputStream where inputStream == aStream {
-            NSNotificationCenter.defaultCenter().postNotificationName(PatchwireStreamEventKey.InputStreamEvent.rawValue, object: nil, userInfo: [eventCodeKey: eventCode.rawValue])
-        } else if let outputStream = outputStream where outputStream == aStream {
-            NSNotificationCenter.defaultCenter().postNotificationName(PatchwireStreamEventKey.OutputStreamEvent.rawValue, object: nil, userInfo: [eventCodeKey: eventCode.rawValue])
+        if let inputStream = inputStream, inputStream == aStream {
+            NotificationCenter.default.post(
+                name: Notification.Name(rawValue: PatchwireStreamEventKey.InputStreamEvent.rawValue),
+                object: nil,
+                userInfo: [eventCodeKey: eventCode.rawValue]
+            )
+        } else if let outputStream = outputStream, outputStream == aStream {
+            NotificationCenter.default.post(
+                name: Notification.Name(rawValue: PatchwireStreamEventKey.OutputStreamEvent.rawValue),
+                object: nil,
+                userInfo: [eventCodeKey: eventCode.rawValue]
+            )
         }
     }
     
     // Handle incoming data
-    private func handleStream(aStream: NSStream) {
-        guard let inputStream = inputStream where inputStream == aStream else { return }
+    private func parse(stream aStream: Stream) {
+        guard let inputStream = inputStream, inputStream == aStream else { return }
         
         let bufferSize = 4096
-        var buffer = [UInt8](count: bufferSize, repeatedValue: 1)
+        var buffer = [UInt8](repeating: 1, count: bufferSize)
         var len = 0
         
         while inputStream.hasBytesAvailable {
             len = inputStream.read(&buffer, maxLength: buffer.count)
             if len > 0 {
-                let output = NSString(bytes: buffer, length: len, encoding: NSASCIIStringEncoding)
-                if let output = output as? String {
-                    handleJSONBlobs(jsonParser.append(output))
+                let output = NSString(bytes: buffer, length: len, encoding: String.Encoding.ascii.rawValue)
+                if let output = output as String? {
+                    parse(jsonBlobs: jsonParser.append(json: output))
                 }
             }
         }
     }
     
     // Parse json and post notification
-    private func handleJSONBlobs(jsonBlobs: [AnyObject]) {
+    private func parse(jsonBlobs: [Any]) {
         for jsonBlob in jsonBlobs {
-            if let JSONDictionary = jsonBlob as? [String: AnyObject] {
-                
-                // Check for batch commands
-                if let batch = JSONDictionary["batch"] as? Bool where batch {
-                    if let commands = JSONDictionary["commands"] as? [[String: AnyObject]] {
-                        logger?.info(withLog: "Received batch of commands")
-                        commands.forEach({ (commandDictionary) in
-                            handleCommandDictionary(commandDictionary)
-                        })
-                    }
-                } else {
-                    // Single command
-                    handleCommandDictionary(JSONDictionary)
+            guard let JSONDictionary = jsonBlob as? [String: Any] else { continue }
+            
+            // Check for batch commands
+            if let batch = JSONDictionary["batch"] as? Bool, batch {
+                if let commands = JSONDictionary["commands"] as? [[String: Any]] {
+                    logger?.info(message: "Received batch of commands")
+                    commands.forEach({ (commandDictionary) in
+                        post(commandData: commandDictionary)
+                    })
                 }
-                
+            } else {
+                // Single command
+                post(commandData: JSONDictionary)
             }
         }
     }
     
-    private func handleCommandDictionary(commandDictionary: [String: AnyObject]) {
-        guard let commandString = commandDictionary["command"] as? String else { return }
-        let command = Command(command: commandString, data: commandDictionary)
-        logger?.info(withLog: "Broadcasting command - \(command.command)")
-        notifier.postCommand(command)
+    private func post(commandData: [String: Any]) {
+        guard let commandName = commandData["command"] as? String else { return }
+        let command = Command(name: commandName, data: commandData)
+        logger?.info(message: "Broadcasting command - \(command.name)")
+        notifier.post(command: command)
     }
     
 }
