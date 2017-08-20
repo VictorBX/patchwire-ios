@@ -19,7 +19,6 @@
 		1C7C37C31D2A115300D3A7D4 /* ChatCommandService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7C37C21D2A115300D3A7D4 /* ChatCommandService.swift */; };
 		1C7C37C41D2A184400D3A7D4 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7C37BE1D2A058900D3A7D4 /* Command.swift */; };
 		1C7C37CE1D2A48AD00D3A7D4 /* Patchwire iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C7C37CD1D2A48AD00D3A7D4 /* Patchwire iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1C7C37D21D2A48AD00D3A7D4 /* PatchwireiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C7C37CB1D2A48AD00D3A7D4 /* PatchwireiOS.framework */; };
 		1C7C37D31D2A48AD00D3A7D4 /* PatchwireiOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1C7C37CB1D2A48AD00D3A7D4 /* PatchwireiOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1C7C37D81D2A48DE00D3A7D4 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7C37BE1D2A058900D3A7D4 /* Command.swift */; };
 		1C7C37D91D2A48DE00D3A7D4 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0927B01D29951300126D22 /* Logger.swift */; };
@@ -103,7 +102,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1C7C37D21D2A48AD00D3A7D4 /* PatchwireiOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
